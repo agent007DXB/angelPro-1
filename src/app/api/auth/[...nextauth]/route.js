@@ -8,6 +8,7 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorizationUrl: `https://accounts.google.com/o/oauth2/auth?response_type=code&prompt=consent&access_type=offline&client_id=${process.env.GOOGLE_CLIENT_ID}`,
     }),
   ],
   callbacks: {
@@ -20,9 +21,9 @@ const handler = NextAuth({
           email: user.email,
           image: user.image,
         });
-        console.log('New user created:', newUser);
+        console.log("New user created:", newUser);
       } else {
-        console.log('Existing user:', existingUser);
+        console.log("Existing user:", existingUser);
       }
       return true;
     },
