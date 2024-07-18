@@ -3,6 +3,7 @@ import "./globals.css";
 import { X, Copy } from "lucide-react";
 import Image from "next/image";
 import QR from "@/app/QR.jpeg";
+import { useRouter } from "next/navigation";
 
 function Deposit({ onClose }) {
   const ModalRef = useRef();
@@ -18,6 +19,7 @@ function Deposit({ onClose }) {
   const [txid, setTxid] = useState("");
   const [amount, setAmount] = useState("");
   const [copyText, setCopytext] = useState("");
+  const router = useRouter();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(copyText);
@@ -26,12 +28,10 @@ function Deposit({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!name || !email || !txid || !amount) {
       alert("All the fields are required.");
       return;
     }
-
     try {
       const res = await fetch("http://localhost:3000/api/deposit", {
         method: "POST",
@@ -40,7 +40,6 @@ function Deposit({ onClose }) {
         },
         body: JSON.stringify({ name, email, txid, amount }),
       });
-
       if (res.ok) {
         router.push("/");
       } else {
@@ -121,9 +120,8 @@ function Deposit({ onClose }) {
               </button>{" "}
             </p>
             <button
-              type="submit"
               className="mt-4 w-full flex item-center justify-center gap-2 px-5 py-3 font-medium rounded-md bg-black"
-              onClick={closeModal}
+              onClick={handleSubmit}
             >
               Submit
             </button>
