@@ -65,6 +65,18 @@ const calculateInrAmount = (usdtVol) => {
 };
 
 export default function SplitScreen() {
+  // const [users, setUsers] = useState([]);
+
+  // useEffect(() => {
+  //   async function fetchUsers() {
+  //     const response = await fetch("/api/user");
+  //     const data = await response.json();
+  //     setUsers(data);
+  //   }
+
+  //   fetchUsers();
+  // }, []);
+
   const session = useSession();
   // console.log(session);
   return (
@@ -159,23 +171,23 @@ export default function SplitScreen() {
                   </Button>
                 </Link>
                 <Link>
-                <Button
-                  as={"a"}
-                  w={{ base: "full", md: "100%" }}
-                  fontSize={"sm"}
-                  size="lg"
-                  fontWeight={600}
-                  // variant={"link"}
-                  href={"#"}
-                  color={"white"}
-                  bg={"blue"}
-                  _hover={{
-                    bg: "red",
-                  }}
-                  onClick={() => signIn("google")}
-                >
-                  Sign In with Google
-                </Button>
+                  <Button
+                    as={"a"}
+                    w={{ base: "full", md: "100%" }}
+                    fontSize={"sm"}
+                    size="lg"
+                    fontWeight={600}
+                    // variant={"link"}
+                    href={"#"}
+                    color={"white"}
+                    bg={"blue"}
+                    _hover={{
+                      bg: "red",
+                    }}
+                    onClick={() => signIn("google")}
+                  >
+                    Sign In with Google
+                  </Button>
                 </Link>
               </Stack>
             </Stack>

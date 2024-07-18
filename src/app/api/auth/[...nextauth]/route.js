@@ -14,12 +14,16 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user, account, profile }) {
       await connect();
+
       const existingUser = await User.findOne({ email: user.email });
       if (!existingUser) {
+        // Determine if the user is the admin
+        const isAdmin = user.email === "onlineangelpro@gmail.com";
+
         const newUser = await User.create({
           name: user.name,
           email: user.email,
-          image: user.image,
+          isAdmin: isAdmin,
         });
         console.log("New user created:", newUser);
       } else {
