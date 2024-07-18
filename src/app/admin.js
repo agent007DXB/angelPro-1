@@ -1,19 +1,18 @@
 // pages/admin.js
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
-      const response = await fetch('/api/user');
+      const response = await fetch("/api/user");
       const data = await response.json();
       setUsers(data);
-      console.log(data, "users")
     }
-    
+
     fetchUsers();
   }, []);
 
@@ -30,13 +29,14 @@ export default function AdminPage() {
           </tr>
         </thead>
         <tbody>
-          {users && users?.map(user => (
-            <tr key={user._id}>
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-            </tr>
-          ))}
+          {users &&
+            users?.map((user) => (
+              <tr key={user._id}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -41,6 +41,7 @@ function Deposit({ onClose }) {
         body: JSON.stringify({ name, email, txid, amount }),
       });
       if (res.ok) {
+        closeModal();
         router.push("/");
       } else {
         throw new Error("Failed");
