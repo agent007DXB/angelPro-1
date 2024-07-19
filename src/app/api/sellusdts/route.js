@@ -6,11 +6,11 @@ export async function POST(request) {
     try {
         // Connect to the database
         await connect();
-        const {usdtVol, phone, txref, accnum, accifsc, accname} = await request.json()
+        const {usdtVol, phone, txref, accnum, accifsc, accname, email} = await request.json()
     
         // Retrieve all users from the database
-        await Sellusdt.insertMany([{usdtVol, phone, txref, accnum, accifsc, accname}]);
-    
+        await Sellusdt.insertMany([{usdtVol, phone, txref, accnum, accifsc, accname, email}]);
+        // console.log({usdtVol, phone, txref, accnum, accifsc, accname, email});
         // Return the users as JSON
         return NextResponse.json({sucess: true}, { status: 200 });
       } catch (error) {
@@ -26,8 +26,8 @@ export async function POST(request) {
 
 // export async function GET() {
 //   await connect();
-//   const topics = await SellUsdt.find();
-//   return NextResponse.json({ topics });
+//   const sell = await SellUsdt.find();
+//   return NextResponse.json({ sell });
 // }
 
 // export async function DELETE(request) {
