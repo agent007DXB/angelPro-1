@@ -47,13 +47,15 @@ import {
   FormHelperText,
 } from "@chakra-ui/react";
 import { useForm, ValidationError } from "@formspree/react";
-import Deposit from "@/app/Deposit";
+import Deposit from "@/app/deposit"
+import Profile from "@/app/profile"
 import { useRouter } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from 'next-auth/react'
+
 
 const calculateInrAmount = (usdtVol) => {
   if (usdtVol > 0 && usdtVol < 500) {
-    // console.log(usdtVol * 92);
+    console.log(usdtVol * 92);
     return usdtVol * 92;
   } else if (usdtVol >= 500 && usdtVol <= 1087) {
     return usdtVol * 92;
@@ -67,12 +69,10 @@ const calculateInrAmount = (usdtVol) => {
 };
 
 export default function SplitScreen() {
-  // const bodyStyle = document.body.style
-  // const [isLocked, setIsLocked] = useState(
-  //   bodyStyle.overflowY === hidden
-  // )
-
+  
+  const { status, data: session } = useSession();
   const [showModal, setShowModal] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [state] = useForm("mrbzgkjq");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
@@ -82,6 +82,9 @@ export default function SplitScreen() {
   const [accnum, setAccnum] = useState("");
   const [accifsc, setAccifsc] = useState("");
   const [accname, setAccname] = useState("");
+  const [email, setEmail] = useState("");
+
+//  setEmail(session?.user?.email) ;
 
   useEffect(() => {
     if (showModal) {
@@ -97,7 +100,7 @@ export default function SplitScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!usdtVol || !phone || !txref || !accnum || !accifsc || !accname) {
+    if (!usdtVol || !phone || !txref || !accnum || !accifsc || !accname || !email) {
       alert("All the fields are required.");
       return;
     }
@@ -108,14 +111,7 @@ export default function SplitScreen() {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({
-          usdtVol,
-          phone,
-          txref,
-          accnum,
-          accifsc,
-          accname,
-        }),
+        body: JSON.stringify({ usdtVol, phone, txref, accnum, accifsc, accname, email }),
       });
 
       if (res.ok) {
@@ -127,6 +123,9 @@ export default function SplitScreen() {
       console.log(error);
     }
   };
+
+  
+  if (status === "authenticated"){
 
   return (
     <div id="sell">
@@ -220,22 +219,22 @@ export default function SplitScreen() {
                   </Button>
                 </Link>
                 <Button
-                  as={"a"}
-                  w={{ base: "full", md: "100%" }}
-                  fontSize={"sm"}
-                  size="lg"
-                  fontWeight={600}
-                  // variant={"link"}
-                  href={"#"}
-                  color={"white"}
-                  bg={"red"}
-                  _hover={{
-                    bg: "black",
-                  }}
-                  onClick={() => signOut()}
-                >
-                  Sign Out
-                </Button>
+            as={"a"}
+            w={{ base: "full", md: "100%" }}
+            fontSize={"sm"}
+            size="lg"
+            fontWeight={600}
+            // variant={"link"}
+            href={"#"}
+            color={"white"}
+            bg={"red"}
+            _hover={{
+              bg: "black",
+            }}
+            onClick={()=>signOut()}
+          >
+            Sign Out
+          </Button>
               </Stack>
             </Stack>
           </Flex>
@@ -261,7 +260,7 @@ export default function SplitScreen() {
                     USDT
                   </Text>
                 </Heading>
-                <Link href="#prices">
+                <Link>
                   <Button
                     size="lg"
                     w={{ base: "full", md: "100%" }}
@@ -271,6 +270,19 @@ export default function SplitScreen() {
                   >
                     Deposit
                   </Button>
+                  
+                </Link>
+                <Link>
+                  <Button
+                    size="lg"
+                    w={{ base: "full", md: "100%" }}
+                    bg={"#fe5823"}
+                    color={"white"}
+                    onClick={() => setShowProfile(true)}
+                  >
+                    Profile
+                  </Button>
+                  
                 </Link>
                 {/* <Text color={"gray.500"} fontSize={{ base: "sm", sm: "md" }}>
                 Please place your order to sell crypto.
@@ -321,6 +333,21 @@ export default function SplitScreen() {
                       field="phone"
                       errors={state.errors}
                     />
+                    <Input
+                      type=""
+                      bg={"white"}
+                      placeholder=""
+                      id="email"
+                      name="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+
+                    />
+                    <ValidationError
+                      prefix="Email"
+                      field="email"
+                      errors={state.errors}
+                    />
                   </InputGroup>
                   <FormControl>
                     <Input
@@ -357,7 +384,7 @@ export default function SplitScreen() {
                     id="accnum"
                     name="accnum"
                     value={accnum}
-                    onChange={(e) => setAccnum(e.target.value)}
+                      onChange={(e) => setAccnum(e.target.value)}
                     required
                   />
                   <ValidationError
@@ -371,7 +398,7 @@ export default function SplitScreen() {
                     id="accifsc"
                     name="accifsc"
                     value={accifsc}
-                    onChange={(e) => setAccifsc(e.target.value)}
+                      onChange={(e) => setAccifsc(e.target.value)}
                     required
                   />
                   <ValidationError
@@ -385,7 +412,7 @@ export default function SplitScreen() {
                     id="accname"
                     name="accname"
                     value={accname}
-                    onChange={(e) => setAccname(e.target.value)}
+                      onChange={(e) => setAccname(e.target.value)}
                     required
                   />
                   <ValidationError
@@ -438,8 +465,10 @@ export default function SplitScreen() {
             </AlertDialogOverlay>
           </AlertDialog>
         </Stack>
-        {showModal && <Deposit onClose={() => setShowModal(false)} />}
+          {showModal && <Deposit onClose={() => setShowModal(false)}/>}
+          {showProfile && <Profile onClose={() => setShowProfile(false)}/>}
       </Container>
     </div>
   );
+}
 }
